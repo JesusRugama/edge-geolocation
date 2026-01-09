@@ -6,10 +6,6 @@ export const handler: CloudFrontResponseHandler = async (
   const request = event.Records[0].cf.request;
   const response = event.Records[0].cf.response;
 
-  const edgeLocation = event.Records[0].cf.config.distributionDomainName 
-    ? event.Records[0].cf.config.requestId.split('-')[0] 
-    : '';
-
   const geoHeaders: Record<string, string> = {
     'x-geo-country': request.headers['cloudfront-viewer-country']?.[0]?.value || '',
     'x-geo-country-name': request.headers['cloudfront-viewer-country-name']?.[0]?.value || '',
@@ -20,7 +16,7 @@ export const handler: CloudFrontResponseHandler = async (
     'x-geo-latitude': request.headers['cloudfront-viewer-latitude']?.[0]?.value || '',
     'x-geo-longitude': request.headers['cloudfront-viewer-longitude']?.[0]?.value || '',
     'x-geo-time-zone': request.headers['cloudfront-viewer-time-zone']?.[0]?.value || '',
-    'x-edge-location': response.headers['x-amz-cf-pop']?.[0]?.value || '',
+    'x-edge-region': process.env.AWS_REGION || '',
   };
 
   const exposedHeaders: string[] = [];

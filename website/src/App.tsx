@@ -41,7 +41,7 @@ function App() {
           latitude: response.headers.get('x-geo-latitude'),
           longitude: response.headers.get('x-geo-longitude'),
           timeZone: response.headers.get('x-geo-time-zone'),
-          edgeLocation: response.headers.get('x-edge-location'),
+          edgeLocation: response.headers.get('x-edge-region'),
         });
       } catch (error) {
         console.error('Error fetching location:', error);
