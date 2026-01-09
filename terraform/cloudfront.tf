@@ -17,6 +17,7 @@ resource "aws_cloudfront_distribution" "main" {
     domain_name              = aws_s3_bucket.main.bucket_regional_domain_name
     origin_id                = "S3-${var.bucket_name}"
     origin_access_control_id = aws_cloudfront_origin_access_control.main.id
+    origin_path              = "/website"
   }
 
   default_cache_behavior {
@@ -31,6 +32,23 @@ resource "aws_cloudfront_distribution" "main" {
       cookies {
         forward = "none"
       }
+      headers = [
+        "CloudFront-Viewer-Country",
+        "CloudFront-Viewer-Country-Name",
+        "CloudFront-Viewer-Country-Region",
+        "CloudFront-Viewer-Country-Region-Name",
+        "CloudFront-Viewer-City",
+        "CloudFront-Viewer-Postal-Code",
+        "CloudFront-Viewer-Latitude",
+        "CloudFront-Viewer-Longitude",
+        "CloudFront-Viewer-Time-Zone"
+      ]
+    }
+
+    lambda_function_association {
+      event_type   = "origin-response"
+      lambda_arn   = "${aws_lambda_function.edge.arn}:${var.lambda_version}"
+      include_body = false
     }
   }
 

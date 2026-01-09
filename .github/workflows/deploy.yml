@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'website/**'
+      - 'edge-function/**'
   workflow_dispatch:
 
 env:
@@ -45,9 +46,27 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Sync to S3
+      - name: Sync website to S3
         run: |
-          aws s3 sync website/dist s3://${{ env.S3_BUCKET }} --delete
+          aws s3 sync website/dist s3://${{ env.S3_BUCKET }}/website --delete
+
+      - name: Build edge function
+        working-directory: edge-function
+        run: |
+          npm ci
+          npm run package
+
+      - name: Upload edge function to S3
+        run: |
+          aws s3 cp edge-function/function.zip s3://${{ env.S3_BUCKET }}/lambda/edge-geolocation.zip
+
+      - name: Update Lambda function
+        run: |
+          aws lambda update-function-code \
+            --function-name edge-geolocation \
+            --s3-bucket ${{ env.S3_BUCKET }} \
+            --s3-key lambda/edge-geolocation.zip \
+            --region ${{ env.AWS_REGION }}
 
       - name: Invalidate CloudFront
         run: |
