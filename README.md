@@ -47,6 +47,7 @@ No external geolocation APIs. No server-side processing. Just CloudFront doing w
                     • x-geo-latitude
                     • x-geo-longitude
                     • x-geo-time-zone
+                    • x-edge-location
 ```
 
 ## Features

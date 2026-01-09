@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Github } from 'lucide-react';
+import { getEdgeLocationName } from './edgeLocations';
 
 interface LocationData {
   country: string;
@@ -10,6 +11,7 @@ interface LocationData {
   latitude: string | null;
   longitude: string | null;
   timeZone: string | null;
+  edgeLocation: string | null;
 }
 
 function App() {
@@ -39,6 +41,7 @@ function App() {
           latitude: response.headers.get('x-geo-latitude'),
           longitude: response.headers.get('x-geo-longitude'),
           timeZone: response.headers.get('x-geo-time-zone'),
+          edgeLocation: response.headers.get('x-edge-location'),
         });
       } catch (error) {
         console.error('Error fetching location:', error);
@@ -51,6 +54,7 @@ function App() {
           latitude: null,
           longitude: null,
           timeZone: null,
+          edgeLocation: null,
         });
       } finally {
         setLoading(false);
@@ -87,6 +91,11 @@ function App() {
             {location?.timeZone && (
               <p className="text-sm text-gray-400 mt-2">
                 Timezone: {location.timeZone}
+              </p>
+            )}
+            {location?.edgeLocation && (
+              <p className="text-xs text-gray-300 mt-4 font-mono">
+                Served from: {getEdgeLocationName(location.edgeLocation)} ({location.edgeLocation})
               </p>
             )}
           </div>
