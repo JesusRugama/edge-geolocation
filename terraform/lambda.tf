@@ -37,5 +37,5 @@ resource "aws_lambda_function" "edge" {
 variable "lambda_version" {
   description = "The published version of the Lambda function to use"
   type        = string
-  default     = "1"
+  default     = "2"
 }
