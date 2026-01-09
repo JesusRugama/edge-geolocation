@@ -16,7 +16,7 @@ export const handler: CloudFrontResponseHandler = async (
     'x-geo-latitude': request.headers['cloudfront-viewer-latitude']?.[0]?.value || '',
     'x-geo-longitude': request.headers['cloudfront-viewer-longitude']?.[0]?.value || '',
     'x-geo-time-zone': request.headers['cloudfront-viewer-time-zone']?.[0]?.value || '',
-    'x-edge-region': process.env.AWS_REGION || '',
+    'x-aws-region': process.env.AWS_REGION || '',
   };
 
   const exposedHeaders: string[] = [];
