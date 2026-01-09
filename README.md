@@ -4,6 +4,8 @@ A showcase of CloudFront's native geolocation capabilities using Lambda@Edge. Di
 
 🌐 **[Live Demo](https://edge-geolocation.demos.jesusrugama.com)**
 
+![Edge Geolocation Demo](project.png)
+
 ## How It Works
 
 1. You visit the site
@@ -92,7 +94,7 @@ The GitHub Actions workflow automatically:
 
 ## Built With AI
 
-This project was built in ~2 hours using AI-assisted development:
+This project was built in ~3 hours using AI-assisted development:
 
 - **Frontend**: Generated with [bolt.new](https://bolt.new)
 - **Infrastructure & Backend**: Built in [Windsurf](https://windsurf.ai) with Claude Opus
