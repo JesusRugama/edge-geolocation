@@ -5,8 +5,11 @@ interface LocationData {
   country: string;
   countryName: string;
   city: string | null;
+  region: string | null;
+  regionName: string | null;
   latitude: string | null;
   longitude: string | null;
+  timeZone: string | null;
 }
 
 function App() {
@@ -24,33 +27,30 @@ function App() {
 
   useEffect(() => {
     const fetchLocation = async () => {
-
-      setLocation({
-          country: 'NI',
-          countryName: 'Nicaragua',
-          city: null,
-          latitude: null,
-          longitude: null,
-        });
-
-      return;
       try {
-        const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-location`;
-        const headers = {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        };
-
-        const response = await fetch(apiUrl, { headers });
-        const data = await response.json();
-        setLocation(data);
+        const response = await fetch(window.location.href, { method: 'HEAD' });
+        
+        setLocation({
+          country: response.headers.get('x-geo-country') || 'unknown',
+          countryName: response.headers.get('x-geo-country-name') || 'Unknown',
+          city: response.headers.get('x-geo-city'),
+          region: response.headers.get('x-geo-region'),
+          regionName: response.headers.get('x-geo-region-name'),
+          latitude: response.headers.get('x-geo-latitude'),
+          longitude: response.headers.get('x-geo-longitude'),
+          timeZone: response.headers.get('x-geo-time-zone'),
+        });
       } catch (error) {
         console.error('Error fetching location:', error);
         setLocation({
           country: 'unknown',
           countryName: 'Unknown',
           city: null,
+          region: null,
+          regionName: null,
           latitude: null,
           longitude: null,
+          timeZone: null,
         });
       } finally {
         setLoading(false);
@@ -79,9 +79,14 @@ function App() {
                 {location?.countryName || 'Unknown'}
               </span>
             </p>
-            {location?.city && (
-              <p className="text-lg text-gray-500 mt-4">
-                City: {location.city}
+            {(location?.city || location?.regionName) && (
+              <p className="text-lg text-gray-500 mt-2">
+                {[location.city, location.regionName].filter(Boolean).join(', ')}
+              </p>
+            )}
+            {location?.timeZone && (
+              <p className="text-sm text-gray-400 mt-2">
+                Timezone: {location.timeZone}
               </p>
             )}
           </div>

@@ -18,10 +18,19 @@ export const handler: CloudFrontResponseHandler = async (
     'x-geo-time-zone': request.headers['cloudfront-viewer-time-zone']?.[0]?.value || '',
   };
 
+  const exposedHeaders: string[] = [];
+  
   for (const [key, value] of Object.entries(geoHeaders)) {
     if (value) {
       response.headers[key] = [{ key, value }];
+      exposedHeaders.push(key);
     }
+  }
+
+  if (exposedHeaders.length > 0) {
+    response.headers['access-control-expose-headers'] = [
+      { key: 'Access-Control-Expose-Headers', value: exposedHeaders.join(', ') }
+    ];
   }
 
   return response;
