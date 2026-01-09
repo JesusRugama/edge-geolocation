@@ -7,6 +7,7 @@ on:
     paths:
       - 'website/**'
       - 'edge-function/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 env:
